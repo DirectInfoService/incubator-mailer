@@ -4,21 +4,27 @@ on: [push, pull_request]
 
 jobs:
   run-tests:
+    name: PHP ${{ matrix.php-versions }}
+
+    runs-on: ubuntu-latest
+    container: ubuntu
+
     services:
       mailpit:
         image: axllent/mailpit
         ports:
-          - 1025
-          - 8025
-    name: PHP ${{ matrix.php-versions }}
-    runs-on: ubuntu-latest
+          - 1025:1025
+          - 8025:8025
+
     env:
-      extensions: mbstring, intl, json, phalcon-5.2.1, xdebug
+      extensions: mbstring, intl, json, xdebug
       key: cache-v0.0.2
+
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.4', '8.0', '8.1']
+        php-versions: ['8.1']
+
     steps:
       - uses: actions/checkout@v1
 
@@ -69,8 +75,6 @@ jobs:
           vendor/bin/codecept build
 
       - name: Run test suites
-        env:
-          DATA_MAILPIT_HOST_URI=localhost
         if: success()
         run: vendor/bin/codecept run --coverage-xml=coverage-${{ matrix.php-versions }}.xml
 
