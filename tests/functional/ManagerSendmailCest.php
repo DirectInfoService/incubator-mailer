@@ -26,7 +26,7 @@ class ManagerSendmailCest extends AbstractFunctionalCest
         $this->config = [
             'driver'    => 'sendmail',
             'sendmail'  => sprintf(
-                'sendmail --smtp-addr %s:%s',
+                '/usr/sbin/sendmail --smtp-addr %s:%s',
                 $_ENV['DATA_MAILPIT_HOST_URI'],
                 $_ENV['DATA_MAILPIT_SMTP_PORT']
             ),
