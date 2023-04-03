@@ -67,7 +67,7 @@ jobs:
       - name: Install Mailpit and create a symbolic link to sendmail command
         run: |
           sudo curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh
-          ln -s /usr/local/bin/mailpit /usr/sbin/sendmail
+          sudo ln -s /usr/local/bin/mailpit /usr/sbin/sendmail
 
       - name: Setup Tests
         run: |
