@@ -17,7 +17,7 @@ jobs:
           - 8025:8025
 
     env:
-      extensions: mbstring, intl, json, xdebug
+      extensions: mbstring, intl, json, xdebug, phalcon-5.2.1
       key: cache-v0.0.2
 
     strategy:
