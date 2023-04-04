@@ -28,6 +28,13 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
+      - name: Install Mailpit and create a symbolic link to sendmail command
+        run: |
+          apt-get update -y
+          apt-get install curl sudo -y
+          sudo curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh
+          sudo ln -s /usr/local/bin/mailpit /usr/sbin/sendmail
+  
       - name: Setup cache environment
         id: cache-env
         uses: shivammathur/cache-extensions@v1
@@ -63,11 +70,6 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-suggest
-
-      - name: Install Mailpit and create a symbolic link to sendmail command
-        run: |
-          sudo curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh
-          sudo ln -s /usr/local/bin/mailpit /usr/sbin/sendmail
 
       - name: Setup Tests
         run: |
