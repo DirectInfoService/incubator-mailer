@@ -28,15 +28,6 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name: Install Mailpit and create a symbolic link to sendmail command
-        run: |
-          apt-get update -y
-          apt-get install curl sudo -y
-          sudo curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | sudo bash
-          sudo ln -s /usr/local/bin/mailpit /usr/sbin/sendmail
-          sudo ls -alt /usr/sbin/sendmail
-          sudo ls -alt /usr/local/bin/mailpit
-
       - name: Setup cache environment
         id: cache-env
         uses: shivammathur/cache-extensions@v1
@@ -77,6 +68,11 @@ jobs:
         run: |
           cp tests/_ci/.env.default .env
           vendor/bin/codecept build
+
+      - name: Install Mailpit and create a symbolic link to sendmail command
+        run: |
+          sudo curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | sudo bash
+          sudo ln -s /usr/local/bin/mailpit /usr/sbin/sendmail
 
       - name: Run test suites
         if: success()
