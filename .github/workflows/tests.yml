@@ -32,8 +32,7 @@ jobs:
         run: |
           apt-get update -y
           apt-get install curl sudo -y
-          sudo curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh
-          sudo chmod +x /usr/local/bin/mailpit
+          sudo curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | sudo bash
           sudo ln -s /usr/local/bin/mailpit /usr/sbin/sendmail
           sudo ls -alt /usr/sbin/sendmail
           sudo ls -alt /usr/local/bin/mailpit
