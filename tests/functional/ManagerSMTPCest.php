@@ -27,8 +27,8 @@ class ManagerSMTPCest extends AbstractFunctionalCest
             'driver'   => 'smtp',
             'host'     => $_ENV['DATA_MAILPIT_HOST_URI'],
             'port'     => $_ENV['DATA_MAILPIT_SMTP_PORT'],
-            'username' => 'example@gmail.com',
-            'password' => 'your_password',
+            'username' => 'user1',
+            'password' => 'password1',
             'from'     => [
                 'email' => 'example_smtp@gmail.com',
                 'name'  => 'EXAMPLE SMTP'
@@ -52,7 +52,7 @@ class ManagerSMTPCest extends AbstractFunctionalCest
             ->subject($subject)
             ->content($body);
 
-        $I->assertSame(1, $message->send());
+        $I->assertSame(1, $message->send(), $message->getLastError());
         $I->assertSame([], $message->getFailedRecipients());
 
         // Get mails sent with the messages from Mailpit
@@ -231,6 +231,40 @@ class ManagerSMTPCest extends AbstractFunctionalCest
         $I->assertSame(1, $eventsCount);
         $I->assertSame(['example_to@gmail.com', 'example_to2@gmail.com'], $message->getFailedRecipients());
         $I->assertNotSame('', $message->getLastError());
+    }
+
+    /**
+     * @test Test sending an email with a wrong password
+     */
+    public function mailerManagerCreateMessageAuthWrongPassword(FunctionalTester $I): void
+    {
+        $this->config['password'] = 'wrongpassword';
+
+        $mailer  = new Manager($this->config);
+        $message = $mailer->createMessage()
+            ->to('example_to@gmail.com')
+            ->subject('Test subject')
+            ->content('content');
+
+        $I->assertSame(0, $message->send());
+        $I->assertStringContainsString('SMTP Error: Could not authenticate.', $message->getLastError());
+    }
+
+    /**
+     * @test Test sending an email with no authentication information passed
+     */
+    public function mailerManagerCreateMessageNoAuthPassed(FunctionalTester $I): void
+    {
+        unset($this->config['password'], $this->config['username']);
+
+        $mailer  = new Manager($this->config);
+        $message = $mailer->createMessage()
+            ->to('example_to@gmail.com')
+            ->subject('Test subject')
+            ->content('content');
+
+        $I->assertSame(0, $message->send());
+        $I->assertStringContainsString('MAIL FROM command failed,Authentication required', $message->getLastError());
     }
 
     /**
