@@ -38,6 +38,7 @@ class MessageTest extends AbstractUnit
         $this->assertSame([], $message->getFailedRecipients());
         $this->assertSame('', $message->getFormat());
         $this->assertSame('', $message->getFrom());
+        $this->assertSame('', $message->getFromName());
         $this->assertSame(null, $message->getPriority());
         $this->assertSame($manager, $message->getManager());
         $this->assertSame('', $message->getReadReceiptTo());
@@ -99,8 +100,14 @@ class MessageTest extends AbstractUnit
             'johndoe9@test.com' => ''
         ], $message->getReplyTo());
 
-        $message->from('johndoe-from@test.com', 'John Doe');
+        // Only an email
+        $message->from('johndoe-from@test.com');
         $this->assertSame('johndoe-from@test.com', $message->getFrom());
+        $this->assertSame('', $message->getFromName());
+
+        // Email and name
+        $message->from('johndoe-from2@test.com', 'John Doe');
+        $this->assertSame('johndoe-from2@test.com', $message->getFrom());
         $this->assertSame('John Doe', $message->getFromName());
 
         $message->priority(5);
