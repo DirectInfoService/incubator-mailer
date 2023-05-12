@@ -289,4 +289,48 @@ class ManagerSMTPCest extends AbstractFunctionalCest
         $I->assertSame(0, $message->send());
         $I->assertNotSame('', $message->getLastError());
     }
+
+    /**
+     * @test Test sending a mail with a password empty ('') but an authentication required -> error
+     */
+    public function mailerManagerCreateMessageSmtpPasswordEmptyAuthRequired(FunctionalTester $I): void
+    {
+        $mailer  = new Manager(array_merge($this->config, ['password' => '']));
+        $message = $mailer->createMessage()
+            ->to('example_to@gmail.com')
+            ->to('example_to2@gmail.com')
+            ->subject('Test subject')
+            ->content('content');
+
+        $I->assertFalse($message->getMessage()->SMTPAuth);
+        $I->assertSame(0, $message->send());
+        $I->assertStringContainsString('MAIL FROM command failed,Authentication required', $message->getLastError());
+    }
+
+    /**
+     * @test Test sending a mail with a password empty ('') but not an authentication required -> OK
+     */
+    public function mailerManagerCreateMessageSmtpPasswordEmptyAuthNotRequired(FunctionalTester $I): void
+    {
+        $this->baseUrl = sprintf(
+            '%s%s:%s/api/v1/',
+            $_ENV['MAILPIT_HOST_PROTOCOL'],
+            $_ENV['SENDMAIL_HOST'],
+            $_ENV['SENDMAIL_API_PORT']
+        );
+
+        $this->config = array_merge($this->config, [
+            'password' => '', 'host' => $_ENV['SENDMAIL_HOST'], 'port' => $_ENV['SENDMAIL_PORT']
+        ]);
+
+        $mailer  = new Manager($this->config);
+        $message = $mailer->createMessage()
+            ->to('example_to@gmail.com')
+            ->to('example_to2@gmail.com')
+            ->subject('Test subject')
+            ->content('content');
+
+        $I->assertFalse($message->getMessage()->SMTPAuth);
+        $I->assertSame(2, $message->send());
+    }
 }
