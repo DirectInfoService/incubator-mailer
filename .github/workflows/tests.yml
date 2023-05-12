@@ -16,6 +16,13 @@ jobs:
           - 1025:1025
           - 8025:8025
 
+      mailpit-sendmail:
+        image: axllent/mailpit
+        ports:
+          - 1026:1025
+          - 8026:8025
+        command: --smtp=0.0.0.0:1026 --listen=0.0.0.0:8026
+
     env:
       extensions: mbstring, intl, json, xdebug, phalcon-5.2.1
       key: cache-v0.0.2
