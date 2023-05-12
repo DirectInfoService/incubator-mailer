@@ -98,7 +98,7 @@ class ManagerSMTPCest extends AbstractFunctionalCest
             ->to($to)
             ->subject($subject);
 
-        $I->assertSame(1, $message->send());
+        $I->assertSame(1, $message->send(), $message->getLastError());
         $I->assertSame([], $message->getFailedRecipients());
 
         // Get sent mails with the messages from Mailpit
@@ -143,12 +143,12 @@ class ManagerSMTPCest extends AbstractFunctionalCest
             $eventsCount++;
         });
 
-        $eventsManager->attach('mailer:afterSend', function ($event, $manager, $params) use ($I, &$eventsCount) {
+        $eventsManager->attach('mailer:afterSend', function ($event, $manager, $params) use ($I, &$eventsCount, $message) {
             $I->assertIsArray($params);
             $I->assertCount(2, $params);
 
             $I->assertIsInt($params[0]);
-            $I->assertSame(1, $params[0]);
+            $I->assertSame(1, $params[0], $message->getLastError());
 
             $I->assertIsArray($params[1]);
             $I->assertSame([], $params[1]);
@@ -159,7 +159,7 @@ class ManagerSMTPCest extends AbstractFunctionalCest
         $mailer->setEventsManager($eventsManager);
 
         // Both events have been triggered and asserted
-        $I->assertSame(1, $message->send());
+        $I->assertSame(1, $message->send(), $message->getLastError());
         $I->assertSame(2, $eventsCount);
     }
 
@@ -180,12 +180,12 @@ class ManagerSMTPCest extends AbstractFunctionalCest
 
         $eventsManager = new EventsManager();
 
-        $eventsManager->attach('mailer:afterSend', function ($event, $manager, $params) use ($I, &$eventsCount) {
+        $eventsManager->attach('mailer:afterSend', function ($event, $manager, $params) use ($I, &$eventsCount, $message) {
             $I->assertIsArray($params);
             $I->assertCount(2, $params);
 
             $I->assertIsInt($params[0]);
-            $I->assertSame(3, $params[0]);
+            $I->assertSame(3, $params[0], $message->getLastError());
 
             $I->assertIsArray($params[1]);
             $I->assertSame([], $params[1]);
@@ -196,7 +196,7 @@ class ManagerSMTPCest extends AbstractFunctionalCest
         $mailer->setEventsManager($eventsManager);
 
         // Event has been triggered and asserted
-        $I->assertSame(3, $message->send());
+        $I->assertSame(3, $message->send(), $message->getLastError());
         $I->assertSame(1, $eventsCount);
     }
 
@@ -331,6 +331,6 @@ class ManagerSMTPCest extends AbstractFunctionalCest
             ->content('content');
 
         $I->assertFalse($message->getMessage()->SMTPAuth);
-        $I->assertSame(2, $message->send());
+        $I->assertSame(2, $message->send(), $message->getLastError());
     }
 }
