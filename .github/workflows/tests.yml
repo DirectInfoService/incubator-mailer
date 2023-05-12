@@ -22,8 +22,8 @@ jobs:
           - 1026:1025
           - 8026:8025
         env:
-          MP_SMTP_BIND_ADDR: 1026
-          MP_UI_BIND_ADDR: 8025
+          MP_SMTP_BIND_ADDR: 0.0.0.0:1026
+          MP_UI_BIND_ADDR: 0.0.0.0:8026
 
     env:
       extensions: mbstring, intl, json, xdebug, phalcon-5.2.1
