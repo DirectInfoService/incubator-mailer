@@ -33,3 +33,10 @@ services:
     volumes:
       - ./tests/_data/smtp-authentication:/smtp-authentication
     command: --smtp-auth-allow-insecure --smtp-auth-file /smtp-authentication
+
+  mailpit-sendmail:
+    image: axllent/mailpit
+    ports:
+      - 1026:1025
+      - 8026:8025
+    command: --smtp=0.0.0.0:1026 --listen=0.0.0.0:8026

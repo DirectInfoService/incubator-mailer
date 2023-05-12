@@ -110,7 +110,7 @@ class Manager extends Injectable implements EventsAwareInterface
         if (isset($config['username'])) {
             $this->mailer->Username = $config['username'];
 
-            // If the password is passed, we can tell PHPMailer the SMTP must be authenticated
+            // If the password is passed, we can tell PHPMailer SMTP must be authenticated
             if (isset($config['password'])) {
                 $this->mailer->SMTPAuth = true;
                 $this->mailer->Password = $config['password'];

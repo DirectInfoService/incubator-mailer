@@ -23,10 +23,17 @@ class ManagerSMTPCest extends AbstractFunctionalCest
     {
         parent::_before();
 
+        $this->baseUrl = sprintf(
+            '%s%s:%s/api/v1/',
+            $_ENV['MAILPIT_HOST_PROTOCOL'],
+            $_ENV['SMTP_HOST'],
+            $_ENV['SMTP_API_PORT']
+        );
+
         $this->config = [
             'driver'   => 'smtp',
-            'host'     => $_ENV['DATA_MAILPIT_HOST_URI'],
-            'port'     => $_ENV['DATA_MAILPIT_SMTP_PORT'],
+            'host'     => $_ENV['SMTP_HOST'],
+            'port'     => $_ENV['SMTP_PORT'],
             'username' => 'user1',
             'password' => 'password1',
             'from'     => [

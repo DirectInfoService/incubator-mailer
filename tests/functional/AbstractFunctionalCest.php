@@ -37,17 +37,10 @@ abstract class AbstractFunctionalCest
     protected string $baseUrl;
 
     /**
-     * Method called before each test, set the URL of MailHog and services for the Di
+     * Method called before each test, set the URL of Mailpit and services for the Di
      */
     public function _before(): void
     {
-        $this->baseUrl = sprintf(
-            '%s%s:%s/api/v1/',
-            $_ENV['DATA_MAILPIT_HOST_PROTOCOL'],
-            $_ENV['DATA_MAILPIT_HOST_URI'],
-            $_ENV['DATA_MAILPIT_API_PORT']
-        );
-
         $dirSeparator = new \Phalcon\Support\Helper\Str\DirSeparator();
 
         $this->di = new \Phalcon\Di\FactoryDefault();
@@ -84,19 +77,19 @@ abstract class AbstractFunctionalCest
     }
 
     /**
-     * Method called after each test resetting the Di and cleaning MailHog messages
+     * Method called after each test resetting the Di and cleaning Mailpit messages
      */
     public function _after(): void
     {
         Di::reset();
 
-        $this->cleanMailhog();
+        $this->cleanMailpit();
     }
 
     /**
-     * Clean messages from MailHog
+     * Clean messages from Mailpit
      */
-    protected function cleanMailhog(): void
+    protected function cleanMailpit(): void
     {
         $ch = curl_init($this->baseUrl . 'messages');
 

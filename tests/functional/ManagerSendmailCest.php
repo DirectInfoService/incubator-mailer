@@ -21,14 +21,21 @@ class ManagerSendmailCest extends AbstractFunctionalCest
 {
     public function _before(): void
     {
+        $this->baseUrl = sprintf(
+            '%s%s:%s/api/v1/',
+            $_ENV['MAILPIT_HOST_PROTOCOL'],
+            $_ENV['SENDMAIL_HOST'],
+            $_ENV['SENDMAIL_API_PORT']
+        );
+
         parent::_before();
 
         $this->config = [
             'driver'    => 'sendmail',
             'sendmail'  => sprintf(
                 'sendmail --smtp-addr %s:%s',
-                $_ENV['DATA_MAILPIT_HOST_URI'],
-                $_ENV['DATA_MAILPIT_SMTP_PORT']
+                $_ENV['SENDMAIL_HOST'],
+                $_ENV['SENDMAIL_PORT']
             ),
             'from'      => [
                 'email' => 'example_sendmail@gmail.com',
