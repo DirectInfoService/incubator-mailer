@@ -16,7 +16,7 @@ jobs:
           - 1025:1025
           - 8025:8025
         volumes:
-          - ./tests/_data/smtp-authentication:/smtp-authentication
+          - ../../tests/_data/smtp-authentication:/smtp-authentication
         env:
           MP_SMTP_AUTH_FILE: /smtp-authentication
           MP_SMTP_AUTH_ALLOW_INSECURE: true
