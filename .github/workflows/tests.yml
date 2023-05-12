@@ -7,6 +7,7 @@ jobs:
     name: PHP ${{ matrix.php-versions }}
 
     runs-on: ubuntu-latest
+    container: ubuntu
 
     services:
       mailpit:
@@ -19,6 +20,8 @@ jobs:
         env:
           MP_SMTP_AUTH_FILE: /smtp-authentication
           MP_SMTP_AUTH_ALLOW_INSECURE: true
+          MP_SMTP_BIND_ADDR: 0.0.0.0:1025
+          MP_UI_BIND_ADDR: 0.0.0.0:8025
 
       mailpit-sendmail:
         image: axllent/mailpit
