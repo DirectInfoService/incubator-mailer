@@ -32,11 +32,15 @@ services:
       - 8025:8025
     volumes:
       - ./tests/_data/smtp-authentication:/smtp-authentication
-    command: --smtp-auth-allow-insecure --smtp-auth-file /smtp-authentication
+    environment:
+      MP_SMTP_AUTH_FILE: /smtp-authentication
+      MP_SMTP_AUTH_ALLOW_INSECURE: true
 
   mailpit-sendmail:
     image: axllent/mailpit
     ports:
       - 1026:1025
       - 8026:8025
-    command: --smtp=0.0.0.0:1026 --listen=0.0.0.0:8026
+    environment:
+      MP_SMTP_BIND_ADDR: 0.0.0.0:1026
+      MP_UI_BIND_ADDR: 0.0.0.0:8026
