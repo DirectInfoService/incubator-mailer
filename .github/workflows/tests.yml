@@ -15,8 +15,6 @@ jobs:
         ports:
           - 1025:1025
           - 8025:8025
-        volumes:
-          - ${{ github.workspace }}/tests/_data/smtp-authentication:/smtp-authentication
         env:
           MP_SMTP_AUTH_FILE: /smtp-authentication
           MP_SMTP_AUTH_ALLOW_INSECURE: true
@@ -86,6 +84,8 @@ jobs:
 
       - name: Install Mailpit and create a symbolic link to sendmail command
         run: |
+          touch /smtp-authentication
+          echo "user1:password1" > /smtp-authentication
           sudo curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | sudo bash
           sudo ln -s /usr/local/bin/mailpit /usr/sbin/sendmail
 
